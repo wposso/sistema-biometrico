@@ -164,7 +164,9 @@ const AuthModel = {
           c.companyid, 
           c.nit, 
           c.name,
-          sc.*
+          sc.id,
+          sc.type,
+          sc.date
       FROM applicants ap
       INNER JOIN company c 
           ON c.companyid = ap.companyid
