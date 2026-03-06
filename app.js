@@ -11,6 +11,7 @@ const locationRoute = require('./src/routes/location.route');
 const alertRoute = require('./src/routes/alert.route');
 const reportRoute = require('./src/routes/reporte.route');
 const userRoute = require('./src/routes/user.route');
+const {html} = require('./src/utils/server.status');
 
 const app = express();
 app.use(express.json());
