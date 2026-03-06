@@ -103,23 +103,19 @@ const AuthModel = {
   changePassword: async (req, res) => {
     const { email, password } = req.body;
     try {
-      // 1. Buscar usuario en DB
       const user = await AuthModel.findByMail(email);
       if (!user) {
         throw new Error("Usuario no encontrado");
       }
 
-      // 2. Verificar contraseña actual
       const isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) {
         throw new Error("La contraseña actual es incorrecta");
       }
 
-      // 3. Hashear nueva contraseña
       const newHash = await bcrypt.hash(password, 10);
 
-      // 4. Guardar nueva contraseña
       user.password = newHash;
       await AuthModel.updatePassword(email, newHash);
 
@@ -151,6 +147,38 @@ const AuthModel = {
     `, [documentNumber,
         documentTypeId,
         companyCode]);
+  },
+
+  loginBiometric: async (type, dni, code) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+
+    return db.oneOrNone(
+      `SELECT 
+          ap.first_name, 
+          ap.last_name, 
+          emp.status as emp_status, 
+          c.companyid, 
+          c.nit, 
+          c.name,
+          sc.*
+      FROM applicants ap
+      INNER JOIN company c 
+          ON c.companyid = ap.companyid
+      JOIN employees emp 
+          ON ap.id = emp.applicant_id
+      LEFT JOIN schedule sc 
+          ON ap.document_number = sc.dni
+            AND DATE(sc.date) = $4
+      WHERE ap.document_number = $2
+        AND ap.document_type_id = $1
+        AND emp.status = 1
+        AND c.companycode = $3;      
+      `
+      , [type, dni, code, today]);
   }
 
 };

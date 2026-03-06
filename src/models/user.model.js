@@ -25,11 +25,11 @@ const User = {
     `);
   },
 
-  create: async ({ type, dni, firstname, lastname, birthday, city, address, phone, email, place, experience }) => {
-    //const hash = await bcrypt.hash(password, 10);
+  create: async ({ type, dni, firstname, lastname, birthday, city, address, phone, email, place, experience, companycode }) => {
+
     const existing = await db.oneOrNone(
-      'SELECT id FROM application_statuses WHERE email=$1',
-      [req.body.email]
+      'SELECT id FROM applicants WHERE email=$1',
+      [email]
     );
 
     if (existing) {
@@ -37,10 +37,24 @@ const User = {
         error: 'El correo ya está registrado'
       });
     }
-    
+
+    /*const companyid = await db.none(
+      'SELECT companyid FROM company WHERE companycode=$1',
+      [companycode]
+    );  */
+
+    const companyRow = await db.oneOrNone(
+      'SELECT companyid FROM company WHERE companycode=$1',
+      [companycode]
+    );
+
+    if (!companyRow) throw new Error('Company no encontrada');
+
+    const companyid = companyRow.companyid;
+
     return db.one(
-      'INSERT INTO applicants(document_type_id, document_number, first_name, last_name, birth_date, city, address, phone, email, applied_position, experience) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *',
-      [type, dni, firstname, lastname, birthday, city, address, phone, email, place, experience]
+      'INSERT INTO applicants(document_type_id, document_number, first_name, last_name, birth_date, city, address, phone, email, applied_position, experience, companyid) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *',
+      [type, dni, firstname, lastname, birthday, city, address, phone, email, place, experience, companyid]
     );
   },
 
@@ -74,10 +88,15 @@ const User = {
     return db.none('DELETE FROM applicants WHERE id=$1', [id]);
   },
 
-  verifyPassword: async (user, password) => {
-    //const hash = await bcrypt.hash(password, 10);
-    return bcrypt.compare(password, user.password_hash);
-  }
+  verifyPassword: async (password) => {
+    const psw = await db.oneOrNone(
+      'SELECT password FROM auth WHERE password=$1',
+      [email]
+    );
+
+    const hash = await bcrypt.hash(password, 10);
+    return bcrypt.compare(hash, psw);
+  } 
 
 }
 

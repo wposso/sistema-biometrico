@@ -13,7 +13,7 @@ const AuthController = {
       if (!user || !user.is_active)
         return res.status(401).json({ error: 'Credenciales inválidas' });
 
-      const valid = await User.verifyPassword(user, password);
+      const valid = await User.verifyPassword(password);
       if (!valid)
         return res.status(401).json({ error: 'Credenciales inválidas' });
 
@@ -109,9 +109,9 @@ const AuthController = {
     }
   },
 
-  changePassword:  async (req, res) => {
+  changePassword: async (req, res) => {
     try {
-      const {email, password} = req.body;
+      const { email, password } = req.body;
 
       await AuthModel.changePassword(email, password);
 
@@ -125,33 +125,73 @@ const AuthController = {
       });
     }
   },
-  
-  getApplicant : async (req, res) => {
-  try {
-    const { documentNumber, documentTypeId, companyCode } = req.body;
 
-    const applicants = await AuthModel.getApplication(
-      documentNumber,
-      documentTypeId,
-      companyCode
-    );
+  getApplicant: async (req, res) => {
+    try {
+      const { documentNumber, documentTypeId, companyCode } = req.body;
 
-    if (applicants.length === 0) {
-      return res.status(404).json({
-        message: "No se encontró el aplicante"
+      const applicants = await AuthModel.getApplication(
+        documentNumber,
+        documentTypeId,
+        companyCode
+      );
+
+      if (applicants.length === 0) {
+        return res.status(404).json({
+          message: "No se encontró el aplicante"
+        });
+      }
+
+      res.json(applicants);
+
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        message: "Error consultando aplicante"
       });
     }
+  },
 
-    res.json(applicants);
+  loginBiometric: async (req, res) => {
+    try {
+      const { type, dni, code } = req.body;
 
-  } catch (error) {
-    console.error(error);
+      if (!type || !dni || !code) {
+        return res.status(400).json({ message: 'Faltan parámetros obligatorios.' });
+      }
 
-    res.status(500).json({
-      message: "Error consultando aplicante"
-    });
+      const result = await AuthModel.loginBiometric(type, dni, code);
+
+      if (!result) {
+        return res.status(404).json({ message: 'No se encontraron registros.' });
+      }
+
+      const response = {
+        user: {
+          name: result.first_name,
+          last_name: result.last_name,
+          status: result.emp_status
+        },
+        company: {
+          companyid: result.companyid,
+          nit: result.nit,
+          name: result.name
+        },
+        schedule: result.date ? {
+          type: result.type,
+          date: result.date
+        } : null
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
   }
-}
+
+
 
 };
 
