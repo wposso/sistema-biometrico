@@ -11,7 +11,7 @@ const authController = require('../controllers/auth.controller');
 
 /**
  * @swagger
- * /Auth/login:
+ * /auth/login:
  *   post:
  *     summary: Login de usuario con device binding
  *     tags: [Auth]
@@ -73,7 +73,7 @@ const authController = require('../controllers/auth.controller');
 
 /**
  * @swagger
- * /Auth/logout:
+ * /auth/logout:
  *   post:
  *     summary: Logout de usuario y destrucción de sessionID
  *     tags: [Auth]
@@ -92,7 +92,7 @@ const authController = require('../controllers/auth.controller');
 
 /**
  * @swagger
- * /Auth/applicant/search:
+ * /auth/application:
  *   post:
  *     summary: Buscar aplicante por documento y empresa
  *     tags: [Auth]
@@ -109,7 +109,7 @@ const authController = require('../controllers/auth.controller');
  *             properties:
  *               documentNumber:
  *                 type: string
- *                 example: "100000007"
+ *                 example: "100000001"
  *               documentTypeId:
  *                 type: integer
  *                 example: 1
@@ -151,11 +151,14 @@ const authController = require('../controllers/auth.controller');
  *         description: Error interno del servidor
  */
 
+
+
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
-router.post("/applicant/search", authController.getApplicant);
+router.post('/application', authController.getApplicant);
 router.post('/renew', authController.renew);
 router.put('/change-password', authController.changePassword);
+router.post('/login-biometric', authController.loginBiometric);
 
 module.exports = router;
 

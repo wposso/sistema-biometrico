@@ -15,6 +15,9 @@ const UserController = {
 
     create: async (req, res) => {
         try {
+
+            //falta validar que el usuario no este creado ya en esa empresa y si no lo esta, que lo cree
+
             const user = await User.create(req.body);
 
             const passwordFinal =
@@ -31,7 +34,7 @@ const UserController = {
             res.json({ message: 'Usuario creado', user, authUser });
         } catch (err) {
             console.error("🔥 ERROR REAL:", err);
-            if (err.code === '23505') { // unique_violation
+            if (err.code === '23505') {
                 return res.status(400).json({
                     error: 'El correo ya está registrado'
                 });
