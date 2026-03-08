@@ -158,20 +158,22 @@ const AuthController = {
       const { type, dni, code } = req.body;
 
       if (!type || !dni || !code) {
-        return res.status(400).json({ message: 'Faltan parámetros obligatorios.' });
+        return res.status(400).json({ message: 'Mandatory parameters are missing.' });
       }
 
       const result = await AuthModel.loginBiometric(type, dni, code);
 
       if (!result) {
-        return res.status(404).json({ message: 'No se encontraron registros.' });
+        return res.status(404).json({ message: 'No records were found.' });
       }
 
       const response = {
         user: {
           name: result.first_name,
           last_name: result.last_name,
-          status: result.emp_status
+          status: result.emp_status,
+          picture: result.picture,
+          picture_type: result.picture_type
         },
         company: {
           companyid: result.companyid,
@@ -187,7 +189,7 @@ const AuthController = {
       res.json(response);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Error interno del servidor.' });
+      res.status(500).json({ message: 'Internal Server Error.' });
     }
   }
 

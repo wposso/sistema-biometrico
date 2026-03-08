@@ -77,6 +77,6 @@ const authController = require('../controllers/auth.controller');
  *         description: Error interno del servidor
  */
 
-router.post('/login-biometric', authController.loginBiometric);
+router.post('/loginBiometric', authController.loginBiometric);
 
 module.exports = router;

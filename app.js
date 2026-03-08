@@ -13,6 +13,7 @@ const locationRoute = require('./src/routes/location.route');
 const alertRoute = require('./src/routes/alert.route');
 const reportRoute = require('./src/routes/reporte.route');
 const userRoute = require('./src/routes/user.route');
+const employeeRoute = require('./src/routes/employee.route');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/engine/v1/location', locationRoute);
 app.use('/api/engine/v1/alerts', alertRoute);
 app.use('/api/engine/v1/reports', reportRoute);
 app.use('/api/engine/v1/users', userRoute);
+app.use('/api/emgine/v1/employees', employeeRoute);
 
 setupSwagger(app);
 

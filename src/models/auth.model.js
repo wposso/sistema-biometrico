@@ -145,8 +145,8 @@ const AuthModel = {
       AND ap.status_id = 1
       AND c.companycode = $3
     `, [documentNumber,
-        documentTypeId,
-        companyCode]);
+      documentTypeId,
+      companyCode]);
   },
 
   loginBiometric: async (type, dni, code) => {
@@ -164,9 +164,11 @@ const AuthModel = {
           c.companyid, 
           c.nit, 
           c.name,
-          sc.id,
+          sc.scheduleid,
           sc.type,
-          sc.date
+          sc.date,
+          emp.picture,
+          emp.picture_type
       FROM applicants ap
       INNER JOIN company c 
           ON c.companyid = ap.companyid
