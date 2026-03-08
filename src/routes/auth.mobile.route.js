@@ -4,7 +4,7 @@ const authController = require('../controllers/auth.controller');
 
 /**
  * @swagger
- * /api/MobileEngine/v1/auth/login-biometric:
+ * /api/MobileEngine/v1/auth/loginBiometric:
  *   post:
  *     summary: Login biométrico de un empleado por documento y empresa
  *     tags: [Auth Mobile]
