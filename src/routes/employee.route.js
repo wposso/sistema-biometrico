@@ -39,14 +39,14 @@ router.post("/sendPicture/:id", upload.single("foto"), async (req, res) => {
     }
 });
 
-router.get("/getPicture/:id", async (req, res) => {
+router.get("/getPicture/:dni", async (req, res) => {
     try {
-        const usuarioId = parseInt(req.params.id, 10);
+        const usuarioId = parseInt(req.params.dni, 10);
 
         console.log('Fetching picture for userId:', usuarioId);
 
         const result = await pool.query(
-            'SELECT picture, picture_type FROM employees WHERE applicant_id=$1',
+            'SELECT picture, picture_type FROM employees WHERE document_number=$1',
             [usuarioId]
         );
 
