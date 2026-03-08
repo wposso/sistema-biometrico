@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require("./upload");
+const upload = require("../middleware/upload.middleware");
 const pool = require('../config/db');
 
 router.post("/sendPicture/:id", upload.single("foto"), async (req, res) => {
