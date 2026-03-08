@@ -34,9 +34,8 @@ app.use('/api/engine/v1/location', locationRoute);
 app.use('/api/engine/v1/alerts', alertRoute);
 app.use('/api/engine/v1/reports', reportRoute);
 app.use('/api/engine/v1/users', userRoute);
-app.use('/api/emgine/v1/employees', employeeRoute);
+app.use('/api/engine/v1/employees', employeeRoute);
 
 setupSwagger(app);
-
 
 module.exports = app;
