@@ -171,9 +171,7 @@ const AuthController = {
         user: {
           name: result.first_name,
           last_name: result.last_name,
-          status: result.emp_status,
-          picture: result.picture,
-          picture_type: result.picture_type
+          status: result.emp_status
         },
         company: {
           companyid: result.companyid,
