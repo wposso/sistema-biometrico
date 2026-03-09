@@ -41,16 +41,16 @@ router.post("/sendPicture/:id", upload.single("foto"), async (req, res) => {
 
 router.get("/getPicture/:dni", async (req, res) => {
     try {
-        const usuarioId = parseInt(req.params.dni, 10);
+        const usuarioId = req.params.dni;
 
-        console.log('Fetching picture for userId:', usuarioId);
+        //console.log('Fetching picture for userId:', usuarioId);
 
         const result = await pool.query(
             'SELECT picture, picture_type FROM employees WHERE document_number=$1',
             [usuarioId]
         );
 
-        console.log('Fetching picture rows:', result || 'No result');
+       // console.log('Fetching picture rows:', result || 'No result');
 
         if (!Array.isArray(result) || result.length === 0) {
             return res.status(404).send("Image not found");
