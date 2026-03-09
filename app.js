@@ -26,15 +26,15 @@ app.use(helmet());
 app.use(rateLimit({ windowMs: 1*60*1000, max: 100 }));
 app.use(session);
 
-app.use('/api/engine/v1/auth', authRoute);
-app.use('/api/MobileEngine/v1/auth', authRouteMobile);
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/auth', authRouteMobile);
 
-app.use('/api/engine/v1/attendance', attendanceRoute);
-app.use('/api/engine/v1/location', locationRoute);
-app.use('/api/engine/v1/alerts', alertRoute);
-app.use('/api/engine/v1/reports', reportRoute);
-app.use('/api/engine/v1/users', userRoute);
-app.use('/api/engine/v1/employees', employeeRoute);
+app.use('/api/v1/attendance', attendanceRoute);
+app.use('/api/v1/location', locationRoute);
+app.use('/api/v1/alerts', alertRoute);
+app.use('/api/v1/reports', reportRoute);
+app.use('/api/v1/users', userRoute);
+app.use('/api/v1/employees', employeeRoute);
 
 setupSwagger(app);
 
