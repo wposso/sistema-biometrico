@@ -167,11 +167,23 @@ const AuthController = {
         return res.status(404).json({ message: 'No records were found.' });
       }
 
+
+      //const foto = result[0];
+
+      if (!Buffer.isBuffer(result.picture)) {
+        return res.status(500).json({ error: "Image data is invalid" });
+      }
+
+      const pictureBase64 = result.picture.toString('base64');
+
+
+
       const response = {
         user: {
           name: result.first_name,
           last_name: result.last_name,
-          status: result.emp_status
+          status: result.emp_status,
+          picture: pictureBase64,
         },
         company: {
           companyid: result.companyid,
