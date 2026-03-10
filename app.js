@@ -14,6 +14,7 @@ const alertRoute = require('./src/routes/alert.route');
 const reportRoute = require('./src/routes/reporte.route');
 const userRoute = require('./src/routes/user.route');
 const employeeRoute = require('./src/routes/employee.route');
+const scheduleRoute = require('./src/routes/schedule.route');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/v1/alerts', alertRoute);
 app.use('/api/v1/reports', reportRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/employees', employeeRoute);
+app.use('/api/v1/schedule', scheduleRoute);
 
 setupSwagger(app);
 
