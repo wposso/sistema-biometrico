@@ -19,7 +19,7 @@ router.post("/sendPicture/:id", upload.single("foto"), async (req, res) => {
             .toBuffer();
 
         await pool.query(
-            'UPDATE employees SET picture=$1, picture_type=$2 WHERE applicant_id=$3',
+            'UPDATE employees SET picture=$1, picture_type=$2 WHERE applicantid=$3',
             [bufferOptimizado, 'image/webp', usuarioId]
         );
 
@@ -41,13 +41,13 @@ router.post("/sendPicture/:id", upload.single("foto"), async (req, res) => {
 
 router.get("/getPicture/:dni", async (req, res) => {
     try {
-        const usuarioId = req.params.dni;
+        const doc = req.params.dni;
 
         //console.log('Fetching picture for userId:', usuarioId);
 
         const result = await pool.query(
-            'SELECT picture, picture_type FROM employees WHERE document_number=$1',
-            [usuarioId]
+            'SELECT e.picture, e.picture_type FROM employees e INNER JOIN applicants ap ON ap.id = e.applicantid WHERE ap.document_number = $1',
+            [doc]
         );
 
        // console.log('Fetching picture rows:', result || 'No result');
