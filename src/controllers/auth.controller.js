@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const Device = require('../models/device.model');
 const AuthModel = require('../models/auth.model');
 const { createAlert } = require('../service/alert.service');
+const customResponse = require('../utils/response');
 
 const AuthController = {
 
@@ -11,11 +12,11 @@ const AuthController = {
 
       const user = await AuthModel.findUser(email);
       if (!user || !user.is_active)
-        return res.status(401).json({ error: 'Credenciales inválidas' });
+        return res.status(401).json({ error: 'Incorrect credentials' });
 
       const valid = await User.verifyPassword(password);
       if (!valid)
-        return res.status(401).json({ error: 'Credenciales inválidas' });
+        return res.status(401).json({ error: 'Incorrect credentials' });
 
       let device = await Device.findActiveByUser(user.id);
 
@@ -25,12 +26,12 @@ const AuthController = {
 
           await createAlert({
             user_id: user.id,
-            type: 'Dispositivo no autorizado',
-            description: `Intento login con otro device: ${device_uuid}`
+            type: 'Unauthorized device',
+            description: `Try logging in with another device: ${device_uuid}`
           });
 
           return res.status(403).json({
-            error: 'Este usuario ya tiene otro dispositivo activo'
+            error: 'This user already has another active device.'
           });
         }
 
@@ -54,19 +55,22 @@ const AuthController = {
         deviceId: device.id
       });
 
-      res.json({
+      /*res.json({
         message: 'Login successful',
         sessionID: req.sessionID,
         user: {
           id: user.id,
           name: user.name,
           role: user.role
-        }
-      });
+        }          
+      });*/
+
+      return customResponse(res, 200, 'Login successful', { sessionID: req.sessionID }, false);
 
     } catch (err) {
       console.error('Error login:', err);
-      res.status(500).json({ error: 'Error interno del servidor' });
+      //res.status(500).json({ error: 'Internal Server Error:' + errr });
+      return customResponse(res, 500, 'Internal Server Error:' + errr, null, true);
     }
   },
 
@@ -167,7 +171,6 @@ const AuthController = {
         return res.status(404).json({ message: 'No records were found.' });
       }
 
-
       //const foto = result[0];
 
       if (!Buffer.isBuffer(result.picture)) {
@@ -175,8 +178,6 @@ const AuthController = {
       }
 
       const pictureBase64 = result.picture.toString('base64');
-
-
 
       const response = {
         user: {
@@ -202,8 +203,6 @@ const AuthController = {
       res.status(500).json({ message: 'Internal Server Error.' });
     }
   }
-
-
 
 };
 

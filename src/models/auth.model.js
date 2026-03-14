@@ -43,7 +43,7 @@ const AuthModel = {
 
   insertSession: async ({ userId, sessionId, deviceId }) => {
     return db.none(
-      `INSERT INTO user_session (userid, sessionid, deviceid, expires_at)
+      `INSERT INTO user_session (authid, sessionid, deviceid, expires_at)
        VALUES ($1, $2, $3, NOW() + interval '1 hour')`,
       [userId, sessionId, deviceId]
     );
@@ -173,7 +173,7 @@ const AuthModel = {
       INNER JOIN company c 
           ON c.companyid = ap.companyid
       JOIN employees emp 
-          ON ap.id = emp.applicant_id
+          ON ap.id = emp.applicantid
       LEFT JOIN schedule sc 
           ON ap.document_number = sc.dni
             AND DATE(sc.date) = $4
